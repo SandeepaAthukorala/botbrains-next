@@ -8,7 +8,7 @@ interface PromptPageProps {
     };
 }
 
-export default function PromptPage({ params }: PromptPageProps) {
+export default function PromptPage({ params: _params }: PromptPageProps) {
     // The PromptEditor component will read the id from the URL using useParams hook
     return <PromptEditor />;
 }
