@@ -1,0 +1,15 @@
+{
+  "/(authenticated)/builder/page": "/builder",
+  "/(authenticated)/categories/page": "/categories",
+  "/(authenticated)/keywords/page": "/keywords",
+  "/(authenticated)/library/page": "/library",
+  "/(authenticated)/prompt/[id]/page": "/prompt/[id]",
+  "/(authenticated)/prompt/new/page": "/prompt/new",
+  "/(authenticated)/settings/api/page": "/settings/api",
+  "/(authenticated)/settings/page": "/settings",
+  "/(authenticated)/settings/variable-defaults/page": "/settings/variable-defaults",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/page": "/",
+  "/setup/page": "/setup"
+}

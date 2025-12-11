@@ -136,20 +136,18 @@ export function BuilderPrompts() {
     const [selectedTemplate, setSelectedTemplate] = useState<typeof builderTemplates[0] | null>(null);
 
     const handleTemplateClick = (template: typeof builderTemplates[0]) => {
-        router.push('/prompt/new', {
-            state: {
-                initialData: {
-                    title: template.title,
-                    type: 'LLM',
-                    prompt_template: template.template,
-                    category: 'Builder Utilities',
-                    color_tag: template.color,
-                    variables: template.variables,
-                    tags: template.tags,
-                    keywords: ['prompt engineering', 'builder']
-                }
-            }
-        });
+        // Store initial data in sessionStorage for the new prompt page
+        sessionStorage.setItem('promptInitialData', JSON.stringify({
+            title: template.title,
+            type: 'LLM',
+            prompt_template: template.template,
+            category: 'Builder Utilities',
+            color_tag: template.color,
+            variables: template.variables,
+            tags: template.tags,
+            keywords: ['prompt engineering', 'builder']
+        }));
+        router.push('/prompt/new');
     };
 
     const handleRunClick = (e: React.MouseEvent, template: typeof builderTemplates[0]) => {

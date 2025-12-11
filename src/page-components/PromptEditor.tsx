@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft } from 'lucide-react';
 import type { Prompt, PromptType, Variable } from '@/types';
 import { usePromptStore } from '@/store/usePromptStore';
@@ -48,20 +48,23 @@ export function PromptEditor() {
     });
 
     const [isSaving, setIsSaving] = useState(false);
-    const pathname = usePathname();
 
-    // Load existing prompt OR initial data from navigation state
+    // Load existing prompt OR initial data from sessionStorage
     useEffect(() => {
-        const state = location.state as { initialData?: Partial<Prompt> } | null;
+        const storedData = sessionStorage.getItem('promptInitialData');
 
-        if (state?.initialData) {
-            // Pre-fill with initial data from builder prompts
-            setFormData({
-                ...formData,
-                ...state.initialData,
-            });
-            // Clear the state so it doesn't persist on refresh
-            window.history.replaceState({}, document.title);
+        if (storedData) {
+            try {
+                const initialData = JSON.parse(storedData) as Partial<Prompt>;
+                setFormData({
+                    ...formData,
+                    ...initialData,
+                });
+                // Clear the stored data
+                sessionStorage.removeItem('promptInitialData');
+            } catch (error) {
+                console.error('Failed to parse initial data:', error);
+            }
         } else if (!isNewPrompt && id) {
             // Load existing prompt
             getPrompt(id).then((prompt) => {
@@ -73,7 +76,7 @@ export function PromptEditor() {
                 }
             });
         }
-    }, [id, isNewPrompt, location.state]);
+    }, [id, isNewPrompt]);
 
     // Auto-detect variables from template
     useEffect(() => {
@@ -150,7 +153,7 @@ export function PromptEditor() {
         <div className="max-w-4xl mx-auto space-y-6 px-8 py-6">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <Button variant="ghost" onClick={() => router.push(-1)} className="px-2">
+                <Button variant="ghost" onClick={() => router.back()} className="px-2">
                     <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <h1 className="text-2xl font-bold text-foreground">
@@ -307,7 +310,7 @@ export function PromptEditor() {
 
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
-                    <Button variant="ghost" onClick={() => router.push(-1)}>
+                    <Button variant="ghost" onClick={() => router.back()}>
                         Cancel
                     </Button>
                     <Button onClick={handleSave} isLoading={isSaving}>

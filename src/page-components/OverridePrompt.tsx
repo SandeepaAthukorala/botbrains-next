@@ -31,22 +31,19 @@ export function OverridePrompt() {
     const router = useRouter();
 
     useEffect(() => {
-        // Navigate to create a new prompt with pre-filled override content
-        router.push('/prompt/new', {
-            state: {
-                initialData: {
-                    title: 'Override Prompt',
-                    type: 'LLM',
-                    prompt_template: OVERRIDE_PROMPT,
-                    category: 'Builder Utilities',
-                    color_tag: '#3B82F6',
-                    variables: [],
-                    tags: ['meta-prompt', 'override', 'builder', 'conversation'],
-                    keywords: ['prompt engineering', 'conversation analysis', 'builder']
-                }
-            }
-        });
-    }, [navigate]);
+        // Store initial data in sessionStorage for the new prompt page
+        sessionStorage.setItem('promptInitialData', JSON.stringify({
+            title: 'Override Prompt',
+            type: 'LLM',
+            prompt_template: OVERRIDE_PROMPT,
+            category: 'Builder Utilities',
+            color_tag: '#3B82F6',
+            variables: [],
+            tags: ['meta-prompt', 'override', 'builder', 'conversation'],
+            keywords: ['prompt engineering', 'conversation analysis', 'builder']
+        }));
+        router.push('/prompt/new');
+    }, [router]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">

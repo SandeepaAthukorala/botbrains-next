@@ -36,29 +36,26 @@ export function RefinerPrompt() {
     const router = useRouter();
 
     useEffect(() => {
-        // Navigate to create a new prompt with pre-filled refiner content
-        router.push('/prompt/new', {
-            state: {
-                initialData: {
-                    title: 'Refiner Prompt',
-                    type: 'LLM',
-                    prompt_template: REFINER_PROMPT,
-                    category: 'Builder Utilities',
-                    color_tag: '#8B5CF6',
-                    variables: [
-                        {
-                            name: 'draft',
-                            type: 'textarea',
-                            placeholder: 'Paste your draft prompt here...',
-                            default: ''
-                        }
-                    ],
-                    tags: ['meta-prompt', 'refiner', 'builder', 'optimization'],
-                    keywords: ['prompt engineering', 'optimization', 'refinement', 'builder']
+        // Store initial data in sessionStorage for the new prompt page
+        sessionStorage.setItem('promptInitialData', JSON.stringify({
+            title: 'Refiner Prompt',
+            type: 'LLM',
+            prompt_template: REFINER_PROMPT,
+            category: 'Builder Utilities',
+            color_tag: '#8B5CF6',
+            variables: [
+                {
+                    name: 'draft',
+                    type: 'textarea',
+                    placeholder: 'Paste your draft prompt here...',
+                    default: ''
                 }
-            }
-        });
-    }, [navigate]);
+            ],
+            tags: ['meta-prompt', 'refiner', 'builder', 'optimization'],
+            keywords: ['prompt engineering', 'optimization', 'refinement', 'builder']
+        }));
+        router.push('/prompt/new');
+    }, [router]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">

@@ -34,29 +34,26 @@ export function GeneratorPrompt() {
     const router = useRouter();
 
     useEffect(() => {
-        // Navigate to create a new prompt with pre-filled generator content
-        router.push('/prompt/new', {
-            state: {
-                initialData: {
-                    title: 'Generator Prompt',
-                    type: 'LLM',
-                    prompt_template: GENERATOR_PROMPT,
-                    category: 'Builder Utilities',
-                    color_tag: '#10B981',
-                    variables: [
-                        {
-                            name: 'goal',
-                            type: 'textarea',
-                            placeholder: 'Describe your goal...',
-                            default: ''
-                        }
-                    ],
-                    tags: ['meta-prompt', 'generator', 'builder'],
-                    keywords: ['prompt engineering', 'system prompt', 'builder']
+        // Store initial data in sessionStorage for the new prompt page
+        sessionStorage.setItem('promptInitialData', JSON.stringify({
+            title: 'Generator Prompt',
+            type: 'LLM',
+            prompt_template: GENERATOR_PROMPT,
+            category: 'Builder Utilities',
+            color_tag: '#10B981',
+            variables: [
+                {
+                    name: 'goal',
+                    type: 'textarea',
+                    placeholder: 'Describe your goal...',
+                    default: ''
                 }
-            }
-        });
-    }, [navigate]);
+            ],
+            tags: ['meta-prompt', 'generator', 'builder'],
+            keywords: ['prompt engineering', 'system prompt', 'builder']
+        }));
+        router.push('/prompt/new');
+    }, [router]);
 
     return (
         <div className="min-h-screen flex items-center justify-center">
