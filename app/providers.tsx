@@ -15,7 +15,7 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const [initError, setInitError] = useState<string | null>(null);
-    const { currentProfile, setCurrentProfile, loadProfiles, getOrCreateProfile } = useProfileStore();
+    const { currentProfile: _currentProfile, setCurrentProfile, loadProfiles, getOrCreateProfile } = useProfileStore();
     const { loadWorkspaces, loadDefaultWorkspace, currentWorkspace } = useWorkspaceStore();
     const { setWorkspace } = usePromptStore();
 
