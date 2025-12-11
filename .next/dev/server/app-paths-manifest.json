@@ -1,0 +1,12 @@
+{
+  "/(authenticated)/builder/page": "app/(authenticated)/builder/page.js",
+  "/(authenticated)/categories/page": "app/(authenticated)/categories/page.js",
+  "/(authenticated)/keywords/page": "app/(authenticated)/keywords/page.js",
+  "/(authenticated)/library/page": "app/(authenticated)/library/page.js",
+  "/(authenticated)/prompt/[id]/page": "app/(authenticated)/prompt/[id]/page.js",
+  "/(authenticated)/prompt/new/page": "app/(authenticated)/prompt/new/page.js",
+  "/(authenticated)/settings/api/page": "app/(authenticated)/settings/api/page.js",
+  "/(authenticated)/settings/page": "app/(authenticated)/settings/page.js",
+  "/(authenticated)/settings/variable-defaults/page": "app/(authenticated)/settings/variable-defaults/page.js",
+  "/page": "app/page.js"
+}

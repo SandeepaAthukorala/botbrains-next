@@ -1,0 +1,3 @@
+{
+  "/(authenticated)/builder/page": "app/(authenticated)/builder/page.js"
+}

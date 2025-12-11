@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+    /* Custom color palette - Minimal Matte Dark */
+    --color-background: hsl(240 5% 4%);
+    --color-foreground: hsl(0 0% 98%);
+    --color-card: hsl(240 5% 6%);
+    --color-card-foreground: hsl(0 0% 98%);
+    --color-popover: hsl(240 5% 6%);
+    --color-popover-foreground: hsl(0 0% 98%);
+    --color-primary: hsl(180 90% 45%);
+    --color-primary-foreground: hsl(240 5% 4%);
+    --color-secondary: hsl(240 4% 16%);
+    --color-secondary-foreground: hsl(0 0% 98%);
+    --color-muted: hsl(240 4% 12%);
+    --color-muted-foreground: hsl(240 5% 60%);
+    --color-accent: hsl(180 90% 45%);
+    --color-accent-foreground: hsl(240 5% 4%);
+    --color-destructive: hsl(0 62.8% 30.6%);
+    --color-destructive-foreground: hsl(0 0% 98%);
+    --color-border: hsl(240 4% 12%);
+    --color-input: hsl(240 4% 12%);
+    --color-ring: hsl(180 90% 45%);
+
+    /* Font families - Using system fonts */
+    --font-family-sans: ui-sans-serif, system-ui, sans-serif;
+    --font-family-display: ui-sans-serif, system-ui, sans-serif;
+
+    /* Border radius */
+    --radius-lg: 0.5rem;
+    --radius-md: calc(0.5rem - 2px);
+    --radius-sm: calc(0.5rem - 4px);
+}
+
+/* Legacy CSS variables */
+:root {
+    --background: 240 5% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 5% 6%;
+    --card-foreground: 0 0% 98%;
+    --primary: 180 90% 45%;
+    --primary-foreground: 240 5% 4%;
+    --glass-panel: rgba(15, 15, 20, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-family-sans);
+}
+
+/* Glass utility classes */
+.glass-panel {
+    background: var(--glass-panel);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--glass-border);
+}

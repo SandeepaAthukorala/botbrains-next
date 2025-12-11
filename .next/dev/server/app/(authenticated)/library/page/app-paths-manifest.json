@@ -1,0 +1,3 @@
+{
+  "/(authenticated)/library/page": "app/(authenticated)/library/page.js"
+}
