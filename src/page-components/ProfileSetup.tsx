@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 export function ProfileSetup() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // Start true to check auth first
     const [error, setError] = useState<string | null>(null);
 
     const { getOrCreateProfile, setCurrentProfile } = useProfileStore();
@@ -20,18 +20,24 @@ export function ProfileSetup() {
     // Check if already authenticated
     useEffect(() => {
         const checkAuth = async () => {
-            const isAuth = await googleAuth.isAuthenticated();
-            if (isAuth) {
-                const user = await googleAuth.getCurrentUser();
-                if (user) {
-                    handleAuthSuccess(user);
+            try {
+                const isAuth = await googleAuth.isAuthenticated();
+                if (isAuth) {
+                    const user = await googleAuth.getCurrentUser();
+                    if (user) {
+                        await handleAuthSuccess(user);
+                        return; // handleAuthSuccess will redirect
+                    }
                 }
+            } catch (error) {
+                console.error('Session check failed:', error);
             }
+            setIsLoading(false); // Only stop loading if NOT authenticated (show login screen)
         };
         checkAuth();
     }, []);
 
-    const handleAuthSuccess = async (user: { id: string; email: string; name: string; picture?: string }) => {
+    const handleAuthSuccess = async (user: any) => {
         try {
             // Get or create profile
             const profile = await getOrCreateProfile(
@@ -44,8 +50,38 @@ export function ProfileSetup() {
             // Set as current profile
             setCurrentProfile(profile);
 
-            // Load default workspace (creates one if doesn't exist)
+            // Load default workspace
             await loadDefaultWorkspace(profile.id);
+
+            // Check if workspace was loaded successfully
+            // If loadDefaultWorkspace didn't create/load a workspace, generate test data
+            // We'll check by trying to fetch workspaces count via API
+            const workspaceCheckResponse = await fetch(`/api/workspaces?profileId=${profile.id}`);
+            if (workspaceCheckResponse.ok) {
+                const workspacesData = await workspaceCheckResponse.json();
+
+                // If no workspaces exist, generate test data
+                if (!workspacesData.workspaces || workspacesData.workspaces.length === 0) {
+                    console.log('🆕 New user detected, generating test data...');
+                    const response = await fetch('/api/setup/generate-data', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            googleId: user.id,
+                            email: user.email,
+                            name: user.name,
+                            avatar: user.picture
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('✅ Test data generated:', data);
+                        // Reload workspace after generating data
+                        await loadDefaultWorkspace(profile.id);
+                    }
+                }
+            }
 
             // Navigate to library
             router.push('/');
@@ -99,8 +135,27 @@ export function ProfileSetup() {
                         transition={{ duration: 0.3, delay: 0.1 }}
                         className="flex justify-center mb-8"
                     >
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-                            <span className="text-4xl">🧠</span>
+                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center backdrop-blur-sm">
+                            <svg
+                                width="56"
+                                height="56"
+                                viewBox="0 0 72 72"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                            >
+                                <g
+                                    transform="translate(12 10)"
+                                    stroke="#60A5FA"
+                                    strokeWidth="2.6"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M20 2.5c7 0 12.5 5.5 12.5 12.5S27 27.5 20 27.5 7.5 22 7.5 15 13 2.5 20 2.5z" />
+                                    <circle cx="4" cy="8" r="1.8" fill="#60A5FA" />
+                                    <circle cx="34" cy="14" r="1.8" fill="#60A5FA" />
+                                    <path d="M4 8l10 6 12-4" />
+                                </g>
+                            </svg>
                         </div>
                     </motion.div>
 
@@ -114,7 +169,7 @@ export function ProfileSetup() {
                         <h1 className="font-display text-3xl font-bold mb-2 bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">
                             Welcome to BotBrains
                         </h1>
-                        <p className="text-secondary text-sm">
+                        <p className="text-gray-300 text-sm">
                             Organize your prompts with powerful workspace management
                         </p>
                     </motion.div>
@@ -140,7 +195,7 @@ export function ProfileSetup() {
                                 className="flex items-center space-x-3 text-sm"
                             >
                                 <span className="text-2xl">{feature.icon}</span>
-                                <span className="text-secondary">{feature.text}</span>
+                                <span className="text-gray-200">{feature.text}</span>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -187,7 +242,7 @@ export function ProfileSetup() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1 }}
-                        className="text-xs text-secondary text-center mt-6"
+                        className="text-xs text-gray-400 text-center mt-6"
                     >
                         We only access files created by this app in your Google Drive
                     </motion.p>
